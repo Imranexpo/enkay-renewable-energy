@@ -48,6 +48,20 @@ button {
 }
 
 /* ── Navbar responsive helpers ── */
+:root {
+  --enkay-nav-offset: 124px;
+}
+.enkay-topbar {
+  display: flex;
+}
+@media (max-width: 1023px) {
+  :root {
+    --enkay-nav-offset: 88px;
+  }
+  .enkay-topbar {
+    display: none !important;
+  }
+}
 .enkay-nav-desktop {
   display: flex !important;
 }
@@ -87,38 +101,29 @@ button {
 .enkay-intro-video-wrapper {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
-  background-color: #000000;
+  background-color: #000;
 }
 
 .enkay-intro-video {
+  position: absolute;
+  inset: 0;
+  top: 0;
+  left: 0;
   display: block;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-  border: none;
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
   outline: none;
-  background-color: #000000;
-  pointer-events: none;
-  object-fit: contain; /* whole video always visible on portrait phones/tablets */
+  object-fit: cover;
   object-position: center center;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Desktop landscape viewports: full edge-to-edge bleed */
-@media (min-width: 1024px) and (min-aspect-ratio: 16/10) {
-  .enkay-intro-video {
-    object-fit: cover;
-  }
+  pointer-events: none;
 }
 
 .enkay-intro-ambient {
@@ -134,8 +139,8 @@ button {
   bottom: max(1.5rem, env(safe-area-inset-bottom, 20px));
   right: 2rem;
   right: max(1.5rem, env(safe-area-inset-right, 20px));
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.08);
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 999px;
   color: rgba(255, 255, 255, 0.7);

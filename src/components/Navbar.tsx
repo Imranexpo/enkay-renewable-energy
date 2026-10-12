@@ -16,12 +16,12 @@ interface NavbarProps {
 function TopBar() {
   return (
     <div
+      className="enkay-topbar"
       style={{
         width: '100%',
         background: '#1d3a1d',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         minHeight: 36,
-        display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 clamp(1rem, 4vw, 2.5rem)',
@@ -80,6 +80,17 @@ const contactLinkStyle: React.CSSProperties = {
   letterSpacing: '0.02em',
   transition: 'color 0.2s',
   whiteSpace: 'nowrap',
+};
+
+const drawerLinkStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  color: '#2d2d2d',
+  textDecoration: 'none',
+  fontSize: '0.9rem',
+  fontFamily: 'Manrope, sans-serif',
+  fontWeight: 600,
 };
 
 function Dot() {
@@ -400,7 +411,8 @@ export default function Navbar({ activePage = 'home', onNavigate, onQuoteClick, 
           aria-hidden={!mobileOpen}
           style={{
             overflow: 'hidden',
-            maxHeight: mobileOpen ? 480 : 0,
+            maxHeight: mobileOpen ? 'calc(100dvh - 90px)' : 0,
+            overflowY: mobileOpen ? 'auto' : 'hidden',
             transition: 'max-height 0.35s ease',
             background: '#fff',
             borderTop: mobileOpen ? '1px solid rgba(46,125,46,0.2)' : 'none',
@@ -456,6 +468,15 @@ export default function Navbar({ activePage = 'home', onNavigate, onQuoteClick, 
               >
                 ☀️ Get a Quote →
               </button>
+            </div>
+
+            {/* Contact & Info */}
+            <div style={{ marginTop: '0.75rem', paddingTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#1d6b1d' }}>Contact &amp; Info</span>
+              <a href={`tel:${COMPANY_INFO.phoneRaw}`} style={drawerLinkStyle}><span>📞</span>{COMPANY_INFO.phone}</a>
+              <a href={`mailto:${COMPANY_INFO.email}`} style={{ ...drawerLinkStyle, wordBreak: 'break-all' }}><span>✉️</span>{COMPANY_INFO.email}</a>
+              <span style={drawerLinkStyle}><span>📍</span>Aminjikarai, Chennai</span>
+              <span style={{ marginTop: 4, padding: '0.6rem 0.8rem', background: '#1d3a1d', borderRadius: 8, color: '#f5b800', fontFamily: 'Manrope, sans-serif', fontWeight: 700, fontSize: '0.68rem', letterSpacing: '0.08em', textAlign: 'center' }}>SOLAR POWER • PROGRESS • RELIABLE</span>
             </div>
           </div>
         </div>

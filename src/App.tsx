@@ -71,7 +71,7 @@ export default function App() {
       {/* ── Page body placeholder (padded below navbar) ── */}
       <main
         style={{
-          paddingTop: 124, // topbar(36) + mainbar(88)
+          paddingTop: 'var(--enkay-nav-offset)', // topbar(36, desktop only) + mainbar(88)
           minHeight: '100vh',
           opacity: navVisible ? 1 : 0,
           transition: 'opacity 0.5s ease 0.15s',
