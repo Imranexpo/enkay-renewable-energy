@@ -117,6 +117,7 @@ export default function LogoIntro({ onComplete }: LogoIntroProps) {
             autoPlay
             muted
             playsInline
+            disablePictureInPicture
             preload="auto"
             onEnded={beginExit}
             onError={beginExit}
