@@ -5,21 +5,25 @@ import type { NavSection } from './components/Navbar';
 import HomePage from './components/home/HomePage';
 import AboutPage from './components/about/AboutPage';
 import ServicesPage from './components/services/ServicesPage';
+import ProductsPage from './components/products/ProductsPage';
+import CalculatorPage from './components/calculator/CalculatorPage';
+import ContactPage from './components/contact/ContactPage';
+import QuotePage from './components/quote/QuotePage';
 import { SECTION_ANCHORS } from './components/home/homeData';
 
 const SESSION_KEY = 'enkay_intro_shown';
 
-type Route = 'home' | 'about' | 'services';
+type Route = 'home' | 'about' | 'services' | 'products' | 'calculator' | 'contact' | 'quote';
 
 // Navbar sections that are separate pages, with their URLs.
-const PAGE_PATHS: Partial<Record<NavSection, string>> = { about: '/about', services: '/services' };
+const PAGE_PATHS: Partial<Record<NavSection, string>> = { about: '/about', services: '/services', products: '/products', calculator: '/calculator', contact: '/contact', quote: '/get-a-quote' };
 
 // Sections that only exist on the homepage — navigating to them from another page returns home first.
-const HOME_ONLY: NavSection[] = ['products', 'calculator'];
+const HOME_ONLY: NavSection[] = [];
 
 const routeFromPath = (): Route => {
   const path = window.location.pathname.replace(/\/+$/, '');
-  return path === '/about' ? 'about' : path === '/services' ? 'services' : 'home';
+  return path === '/about' ? 'about' : path === '/services' ? 'services' : path === '/products' ? 'products' : path === '/calculator' ? 'calculator' : path === '/contact' ? 'contact' : path === '/get-a-quote' ? 'quote' : 'home';
 };
 
 function hasSeenIntroThisSession(): boolean {
@@ -76,7 +80,7 @@ export default function App() {
     setActivePage(section);
     const target = anchorId ?? SECTION_ANCHORS[section];
 
-    // About Us and Services & Solutions are their own pages
+    // About Us, Services, Products the Calculator and Contact are their own pages
     const pagePath = PAGE_PATHS[section];
     if (pagePath) {
       const next = section as Route;
@@ -114,7 +118,7 @@ export default function App() {
       <Navbar
         activePage={activePage}
         onNavigate={handleNavigate}
-        onQuoteClick={() => setQuoteOpen(true)}
+        onQuoteClick={() => handleNavigate('quote')}
         visible={navVisible}
       />
 
@@ -136,6 +140,34 @@ export default function App() {
           />
         ) : route === 'services' ? (
           <ServicesPage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : route === 'products' ? (
+          <ProductsPage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : route === 'calculator' ? (
+          <CalculatorPage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : route === 'quote' ? (
+          <QuotePage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : route === 'contact' ? (
+          <ContactPage
             onNavigate={handleNavigate}
             quoteOpen={quoteOpen}
             onQuoteOpen={() => setQuoteOpen(true)}
