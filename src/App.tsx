@@ -2,8 +2,25 @@ import React, { useState, useEffect } from 'react';
 import LogoIntro from './components/LogoIntro';
 import Navbar from './components/Navbar';
 import type { NavSection } from './components/Navbar';
+import HomePage from './components/home/HomePage';
+import AboutPage from './components/about/AboutPage';
+import ServicesPage from './components/services/ServicesPage';
+import { SECTION_ANCHORS } from './components/home/homeData';
 
 const SESSION_KEY = 'enkay_intro_shown';
+
+type Route = 'home' | 'about' | 'services';
+
+// Navbar sections that are separate pages, with their URLs.
+const PAGE_PATHS: Partial<Record<NavSection, string>> = { about: '/about', services: '/services' };
+
+// Sections that only exist on the homepage — navigating to them from another page returns home first.
+const HOME_ONLY: NavSection[] = ['products', 'calculator'];
+
+const routeFromPath = (): Route => {
+  const path = window.location.pathname.replace(/\/+$/, '');
+  return path === '/about' ? 'about' : path === '/services' ? 'services' : 'home';
+};
 
 function hasSeenIntroThisSession(): boolean {
   try { return sessionStorage.getItem(SESSION_KEY) === 'true'; }
@@ -19,7 +36,8 @@ export default function App() {
   const [showIntro,   setShowIntro]   = useState<boolean | null>(null);
   // Navbar fades in after intro completes
   const [navVisible,  setNavVisible]  = useState(false);
-  const [activePage,  setActivePage]  = useState<NavSection>('home');
+  const [activePage,  setActivePage]  = useState<NavSection>(routeFromPath);
+  const [route,       setRoute]       = useState<Route>(routeFromPath);
   const [quoteOpen,   setQuoteOpen]   = useState(false);
 
   // Determine first-visit after mount (avoids SSR/hydration mismatch)
@@ -33,6 +51,18 @@ export default function App() {
     }
   }, []);
 
+  // Keep the view in sync with browser back/forward
+  useEffect(() => {
+    const onPop = () => {
+      const next = routeFromPath();
+      setRoute(next);
+      setActivePage(next);
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
   // ── Intro → Navbar handoff ─────────────────────────────────────────────
   const handleIntroComplete = () => {
     markIntroSeen();
@@ -44,10 +74,30 @@ export default function App() {
   // ── Navigation ─────────────────────────────────────────────────────────
   const handleNavigate = (section: NavSection, anchorId?: string) => {
     setActivePage(section);
-    if (anchorId) {
+    const target = anchorId ?? SECTION_ANCHORS[section];
+
+    // About Us and Services & Solutions are their own pages
+    const pagePath = PAGE_PATHS[section];
+    if (pagePath) {
+      const next = section as Route;
+      if (route !== next) window.history.pushState({}, '', pagePath);
+      setRoute(next);
+      window.scrollTo({ top: 0, behavior: route === next ? 'smooth' : 'auto' });
+      return;
+    }
+
+    // Leaving a sub-page for a homepage section
+    const needsHome = route !== 'home' && (section === 'home' || HOME_ONLY.includes(section));
+    if (needsHome) {
+      window.history.pushState({}, '', '/');
+      setRoute('home');
+      window.scrollTo({ top: 0 });
+    }
+
+    if (target) {
       setTimeout(() => {
-        document.getElementById(anchorId)?.scrollIntoView({ behavior: 'smooth' });
-      }, 60);
+        document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+      }, needsHome ? 150 : 60);
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -77,7 +127,28 @@ export default function App() {
           transition: 'opacity 0.5s ease 0.15s',
         }}
       >
-        {/* Homepage sections will be added here */}
+        {route === 'about' ? (
+          <AboutPage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : route === 'services' ? (
+          <ServicesPage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : (
+          <HomePage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        )}
       </main>
     </>
   );
