@@ -41,7 +41,7 @@ const ToBeQuoted = ({ children = 'To be quoted' }: { children?: ReactNode }) => 
 );
 
 export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: Props) {
-  const openQuote = useCallback(() => onQuoteOpen(), [onQuoteOpen]);
+  const openQuote = useCallback(() => onNavigate('quote'), [onNavigate]);
   const [values, setValues] = useState<QuoteValues>(EMPTY_QUOTE);
   const [errors, setErrors] = useState<QuoteErrors>({});
   const [busy, setBusy] = useState(false);

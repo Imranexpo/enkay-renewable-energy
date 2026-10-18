@@ -47,7 +47,7 @@ const EMPTY: ContactValues = { name: '', email: '', phone: '', subject: '', mess
 const ORDER: (keyof ContactValues)[] = ['name', 'email', 'phone', 'subject', 'message'];
 
 export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: Props) {
-  const openQuote = useCallback(() => onQuoteOpen(), [onQuoteOpen]);
+  const openQuote = useCallback(() => onNavigate('quote'), [onNavigate]);
   const [values, setValues] = useState<ContactValues>(EMPTY);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [busy, setBusy] = useState(false);

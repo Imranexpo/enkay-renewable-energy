@@ -43,8 +43,8 @@ export const PROCESS_STEPS: { icon: LucideIcon; title: string; text: string }[] 
 ];
 
 export const SERVE_CARDS: { icon: LucideIcon; img: string; title: string; text: string }[] = [
-  { icon: House, img: `${A}/serve-residential.jpg`, title: 'Residential', text: 'Rooftop solar for homes, on-grid and off-grid.' },
-  { icon: Building2, img: `${A}/serve-commercial.jpg`, title: 'Commercial', text: 'Sustainable energy for businesses and commercial buildings.' },
+  { icon: House, img: `${A}/serve-residential.png`, title: 'Residential', text: 'Rooftop solar for homes, on-grid and off-grid.' },
+  { icon: Building2, img: `${A}/serve-commercial.png`, title: 'Commercial', text: 'Sustainable energy for businesses and commercial buildings.' },
   { icon: Factory, img: `${A}/serve-industrial.jpg`, title: 'Industrial', text: 'Solar PV power plants of any capacity for export to the grid.' },
 ];
 

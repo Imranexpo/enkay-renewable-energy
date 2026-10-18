@@ -20,7 +20,7 @@ interface HomePageProps {
 export default function HomePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: HomePageProps) {
   const [topic, setTopic] = useState('');
 
-  const openQuote = useCallback((t = '') => { setTopic(t); onQuoteOpen(); }, [onQuoteOpen]);
+  const openQuote = useCallback((t = '') => { if (t) { setTopic(t); onQuoteOpen(); } else onNavigate('quote'); }, [onQuoteOpen, onNavigate]);
 
   return (
     <div className="hp">

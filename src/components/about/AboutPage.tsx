@@ -18,7 +18,7 @@ interface AboutPageProps {
 const BADGE_ICONS = [BadgeCheck, ShieldCheck, Workflow];
 
 export default function AboutPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: AboutPageProps) {
-  const openQuote = useCallback(() => onQuoteOpen(), [onQuoteOpen]);
+  const openQuote = useCallback(() => onNavigate('quote'), [onNavigate]);
 
   return (
     <div className="hp ab">

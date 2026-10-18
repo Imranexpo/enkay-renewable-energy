@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { ArrowRight, BadgeCheck, Info, LayoutGrid, ListChecks, Medal, PlugZap, ShieldCheck, Sun } from 'lucide-react';
+import { ArrowRight, BadgeCheck, Info, ListChecks, Medal, PlugZap, ShieldCheck, Sun } from 'lucide-react';
 import type { NavSection } from '../Navbar';
 import SiteFooter from '../home/SiteFooter';
 import QuoteModal from '../home/QuoteModal';
 import {
-  BOM, CATEGORIES, CERT_SPEC, INVERTER_SPEC, MODULE_SPEC, OTHER_OPTIONS, PRODUCTS_CTA_BG, PRODUCTS_HERO_IMAGE,
+  BOM, CATEGORIES, CERT_SPEC, MODULE_SPEC, OTHER_OPTIONS, PRODUCTS_CTA_BG, PRODUCTS_HERO_IMAGE,
 } from './productsData';
 import '../home/home.css';
 import './products.css';
@@ -17,7 +17,7 @@ interface ProductsPageProps {
 }
 
 export default function ProductsPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: ProductsPageProps) {
-  const openQuote = useCallback(() => onQuoteOpen(), [onQuoteOpen]);
+  const openQuote = useCallback(() => onNavigate('quote'), [onNavigate]);
 
   return (
     <div className="hp pb">
@@ -44,8 +44,8 @@ export default function ProductsPage({ onNavigate, quoteOpen, onQuoteOpen, onQuo
             <p>Quality components for residential, industrial and commercial solar power plants.</p>
           </div>
           <div className="pb-cat-grid">
-            {CATEGORIES.map(({ icon: Icon, img, title }) => (
-              <article key={title} className="pb-cat">
+            {CATEGORIES.map(({ icon: Icon, img, title, side }) => (
+              <article key={title} className={side ? `pb-cat is-${side}` : 'pb-cat'}>
                 <img src={img} alt={title} loading="lazy" />
                 <div className="pb-cat-body">
                   <span className="pb-ico"><Icon size={22} /></span>
@@ -58,7 +58,7 @@ export default function ProductsPage({ onNavigate, quoteOpen, onQuoteOpen, onQuo
       </section>
 
       {/* ── Specifications ── */}
-      <section className="pb-specs" aria-labelledby="pb-specs-title">
+      {/* <section className="pb-specs" aria-labelledby="pb-specs-title">
         <div className="hp-wrap">
           <div className="pb-head">
             <div className="hp-eyebrow is-center">Specifications</div>
@@ -91,16 +91,14 @@ export default function ProductsPage({ onNavigate, quoteOpen, onQuoteOpen, onQuo
             </article>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Bill of materials ── */}
       <section className="pb-bom" aria-labelledby="pb-bom-title">
         <div className="hp-wrap">
           <div className="pb-bom-head">
             <div>
-              <div className="hp-eyebrow">Bill of Materials</div>
-              <h2 id="pb-bom-title">5 kWp On-Grid Solar Power Plant</h2>
-              <p>Complete list of components for a 5 kWp on-grid solar power plant system.</p>
+              <div id="pb-bom-title" className="hp-eyebrow">Bill of Materials</div>
             </div>
             <span className="pb-count"><ListChecks size={20} />{BOM.length} line items</span>
           </div>
@@ -109,7 +107,7 @@ export default function ProductsPage({ onNavigate, quoteOpen, onQuoteOpen, onQuo
             <table className="pb-table">
               <thead>
                 <tr>
-                  <th>No.</th><th>Item</th><th>Brand</th><th>Specification</th><th>Unit</th><th className="is-qty">Quantity</th>
+                  <th>No.</th><th>Item</th><th>Brand</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,9 +116,6 @@ export default function ProductsPage({ onNavigate, quoteOpen, onQuoteOpen, onQuo
                     <td data-label="No."><b className="pb-no">{i + 1}</b></td>
                     <td className="pb-item">{r.item}</td>
                     <td data-label="Brand" className={r.brand ? 'pb-brand' : 'is-na'}>{r.brand ?? 'Not specified'}</td>
-                    <td data-label="Specification" className={r.spec ? '' : 'is-na'}>{r.spec ?? 'Not specified'}</td>
-                    <td data-label="Unit" className="pb-unit">{r.unit}</td>
-                    <td data-label="Qty" className="is-qty">{r.qty}</td>
                   </tr>
                 ))}
               </tbody>

@@ -59,7 +59,7 @@ function Field({ id, label, required, error, hint, small, children }: FieldProps
 }
 
 export default function CalculatorPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: Props) {
-  const openQuote = useCallback(() => onQuoteOpen(), [onQuoteOpen]);
+  const openQuote = useCallback(() => onNavigate('quote'), [onNavigate]);
   const [inputs, setInputs] = useState<CalcInputs>(EMPTY_INPUTS);
   const [errors, setErrors] = useState<CalcErrors>({});
   const [result, setResult] = useState<CalcResult | null>(null);

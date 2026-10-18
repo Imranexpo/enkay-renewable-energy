@@ -19,7 +19,7 @@ interface ServicesPageProps {
 
 export default function ServicesPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: ServicesPageProps) {
   const [topic, setTopic] = useState('');
-  const openQuote = useCallback((t = '') => { setTopic(t); onQuoteOpen(); }, [onQuoteOpen]);
+  const openQuote = useCallback((t = '') => { if (t) { setTopic(t); onQuoteOpen(); } else onNavigate('quote'); }, [onQuoteOpen, onNavigate]);
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
