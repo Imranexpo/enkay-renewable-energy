@@ -103,22 +103,59 @@
 .hp-step-label { font: 700 9.5px var(--hp-body); letter-spacing: .04em; color: var(--hp-dark); text-transform: uppercase; }
 
 /* ── Trusted brands ── */
-.hp-brands-wrap { position: relative; z-index: 2; margin-top: -87px; }
+.hp-brands-wrap { position: relative; z-index: 2; }
+.hp-brands-wrap.is-overlap { margin-top: -87px; }
 .hp-brands {
-  background: #fff; border-radius: 28px; padding: 28px 36px 34px;
+  background: #fff; border-radius: 28px; padding: 28px 36px 22px;
   box-shadow: 0 30px 60px -10px rgba(13,55,33,.18), 0 6px 20px rgba(13,55,33,.06);
 }
+/* Standalone placement (About page): no outer card, sits directly on the page background */
+.hp-brands-wrap:not(.is-overlap) .hp-brands { background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0; }
 .hp-brands-head { display: flex; align-items: center; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; }
 .hp-brands-title { display: flex; align-items: center; gap: 12px; font: 700 20px var(--hp-head); color: var(--hp-dark); }
 .hp-brands-title svg { color: var(--hp-green); }
 .hp-brands-head p { font-size: 15px; color: var(--hp-text); }
-.hp-brand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 74px; margin-top: 26px; }
-.hp-brand {
-  height: 92px; border: 1px solid var(--hp-border); border-radius: 14px; background: #fff;
-  display: grid; place-items: center; padding: 12px;
-  box-shadow: 0 6px 16px rgba(13,55,33,.06);
+.hp-brand-cat { margin-top: 18px; }
+.hp-brand-cat-title { font: 700 13px var(--hp-head); color: #111; margin-bottom: 4px; }
+.hp-marquee {
+  display: flex; overflow-x: auto; overflow-y: hidden; padding: 16px 0 28px; margin: -6px 0 -14px;
+  scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 72px, #000 calc(100% - 72px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 72px, #000 calc(100% - 72px), transparent 100%);
 }
-.hp-brand img { max-height: 64px; max-width: 100%; width: auto; object-fit: contain; }
+.hp-marquee::-webkit-scrollbar { display: none; }
+.hp-marquee-track { display: flex; flex: none; gap: 16px; padding-right: 16px; list-style: none; }
+.hp-brand {
+  position: relative; z-index: 1; flex: 0 0 150px; width: 150px; height: 80px; padding: 8px 12px; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px;
+  transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow .3s ease, border-color .3s ease;
+}
+.hp-brand:hover { z-index: 10; transform: scale(1.15); box-shadow: 0 12px 24px -6px rgba(0,0,0,.12); border-color: #cfe3d4; }
+.hp-brand img {
+  display: block; width: auto; height: auto; max-width: 100%; max-height: 100%;
+  object-fit: contain; user-select: none; -webkit-user-drag: none;
+}
+
+/* Wordmark stand-ins for brands without a logo file yet */
+.hp-wm { display: flex; flex-direction: column; align-items: center; line-height: 1; white-space: nowrap; user-select: none; }
+.hp-wm b { font-weight: 800; }
+.hp-wm i { font-style: normal; }
+.hp-wm-vikram b { font: 700 15px var(--hp-head); color: #1d2b53; letter-spacing: -.02em; }
+.hp-wm-vikram i { font: 600 4.5px var(--hp-body); color: #c8262d; margin-top: 3px; letter-spacing: .04em; }
+.hp-wm-utl b { font: 800 12px 'Times New Roman', serif; color: #c8262d; letter-spacing: .02em; }
+.hp-wm-microtek b { font: 800 italic 14px var(--hp-head); color: #c8262d; letter-spacing: -.02em; }
+.hp-wm-microtek i { font: 600 4.5px var(--hp-body); color: #1d4fa3; margin-top: 3px; letter-spacing: .06em; }
+.hp-wm-avaada b { font: 500 14px var(--hp-head); color: #1d4fa3; letter-spacing: .2em; }
+.hp-wm-amaze b { font: 800 14px var(--hp-head); color: #6ab42d; letter-spacing: .01em; }
+.hp-wm-amaze i { font: 700 9px var(--hp-body); color: #333; margin-top: 2px; letter-spacing: .12em; }
+.hp-wm-amaze i::first-letter { color: #333; }
+.hp-wm-premier b { font: 700 14px var(--hp-head); color: #1d4fa3; }
+.hp-wm-premier i { font: 700 11px var(--hp-head); color: #3a9a3a; margin-top: 1px; }
+.hp-wm-deye b { font: 800 26px var(--hp-head); color: #2b2b8f; letter-spacing: -.04em; }
+.hp-wm-polycab b { font: 800 14px var(--hp-head); color: #e0262e; letter-spacing: .03em; }
+
+@media (prefers-reduced-motion: reduce) { .hp-brand { transition: none; } }
 
 /* ── Why choose ── */
 .hp-why { padding: 104px 0 106px; }
@@ -286,7 +323,6 @@
 
 /* ── Responsive ── */
 @media (max-width: 1279px) {
-  .hp-brand-grid { gap: 28px; }
   .hp-steps-card { bottom: 20px; }
 }
 @media (max-width: 1100px) {
@@ -302,7 +338,6 @@
   .hp-sol-grid { grid-template-columns: repeat(2, 1fr); }
   .hp-cta { grid-template-columns: 1fr; }
   .hp-cta-media { min-height: 380px; order: 2; }
-  .hp-brand-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
   .hp-hero { min-height: 0; padding: 48px 0 120px; }
@@ -310,11 +345,11 @@
   .hp-hero-actions { gap: 12px; margin-top: 28px; }
   .hp-pills { margin-top: 28px; }
   .hp-pill { font-size: 13px; height: 38px; padding: 0 14px 0 10px; }
-  .hp-brands-wrap { margin-top: -80px; }
+  .hp-brands-wrap.is-overlap { margin-top: -80px; }
   .hp-brands { padding: 22px 18px 24px; border-radius: 22px; }
-  .hp-brand-grid { gap: 14px; margin-top: 20px; }
-  .hp-brand { height: 76px; }
-  .hp-brand img { max-height: 48px; }
+  .hp-brand { flex-basis: 124px; width: 124px; height: 66px; padding: 7px 10px; }
+  .hp-marquee-track { gap: 12px; padding-right: 12px; }
+  .hp-marquee { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%); }
   .hp-why { padding: 64px 0; }
   .hp-why h2, .hp-section-head h2, .hp-products-head h2 { font-size: 28px; }
   .hp-collage-badge { padding: 10px 12px; gap: 8px; }

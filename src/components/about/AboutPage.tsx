@@ -3,7 +3,7 @@ import { BadgeCheck, Check, Eye, Lightbulb, MapPin, ShieldCheck, Sun, Target, Wo
 import type { NavSection } from '../Navbar';
 import SiteFooter from '../home/SiteFooter';
 import QuoteModal from '../home/QuoteModal';
-import { BRANDS } from '../home/homeData';
+import TrustedBrands from '../home/TrustedBrands';
 import { ABOUT_BADGES, ABOUT_IMAGES, PARTNER_BRANDS, WHY_LIST } from './aboutData';
 import '../home/home.css';
 import './about.css';
@@ -121,16 +121,10 @@ export default function AboutPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
         </div>
       </section>
 
-      {/* ── Premium brands ── */}
-      <section className="ab-wrap ab-brands" aria-labelledby="ab-brands-title">
-        <h2 id="ab-brands-title">Premium Quality Brands</h2>
-        <p>We provide only top-quality solar panels, inverters, cables and accessories from reputed brands to our esteemed customers.</p>
-        <ul className="ab-brand-grid">
-          {BRANDS.map(b => (
-            <li key={b.name}><img src={b.src} alt={b.name} width={b.w} height={b.h} loading="lazy" /></li>
-          ))}
-        </ul>
-      </section>
+      {/* ── Premium brands (shared with Home) ── */}
+      <div className="ab-brands">
+        <TrustedBrands title="Premium Quality Brands" />
+      </div>
 
       <SiteFooter onNavigate={onNavigate} onQuote={openQuote} />
       <QuoteModal open={quoteOpen} onClose={onQuoteClose} />

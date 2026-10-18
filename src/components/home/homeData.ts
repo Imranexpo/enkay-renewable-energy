@@ -10,12 +10,32 @@ export const HERO_PILLS = ['Authorized Dealer', 'Residential · Commercial · Ot
 
 export const STEPS = ['Concept', 'Design', 'Procure', 'Build', 'Commission'];
 
-export const BRANDS = [
-  { name: 'Adani', src: `${A}/brand-adani.png`, w: 125, h: 43 },
-  { name: 'TATA Power Solar', src: `${A}/brand-tata.png`, w: 116, h: 77 },
-  { name: 'Waaree', src: `${A}/brand-waaree.png`, w: 185, h: 51 },
-  { name: 'Luminous', src: `${A}/brand-luminous.svg`, w: 183, h: 38 },
-];
+export type Brand = {
+  name: string;
+  slug: string;
+  /** Logo file exported from the Figma design (public/assets/brands). */
+  src?: string;
+  /** Wordmark lines, used only while a brand has no logo file. */
+  mark?: [string, string?];
+};
+
+const L = '/assets/brands';
+
+const ADANI: Brand = { name: 'Adani Solar', slug: 'adani', src: `${L}/adani.png` };
+const TATA: Brand = { name: 'Tata Power Solaroof', slug: 'tata', src: `${L}/tata.png` };
+const VIKRAM: Brand = { name: 'Vikram Solar', slug: 'vikram', src: `${L}/vikram.png` };
+const UTL: Brand = { name: 'UTL Solar', slug: 'utl', src: `${L}/utl.png` };
+const MICROTEK: Brand = { name: 'Microtek', slug: 'microtek', src: `${L}/microtek.png` };
+const AVAADA: Brand = { name: 'Avaada', slug: 'avaada', src: `${L}/avaada.png` };
+const AMAZE: Brand = { name: 'Amaze Solar', slug: 'amaze', src: `${L}/amaze.png` };
+const PREMIER: Brand = { name: 'Premier Energies', slug: 'premier', src: `${L}/premier.png` };
+const DEYE: Brand = { name: 'Deye', slug: 'deye', src: `${L}/deye.png` };
+const WAAREE: Brand = { name: 'Waaree', slug: 'waaree', src: `${L}/waaree.png` };
+const POLYCAB: Brand = { name: 'Polycab', slug: 'polycab', mark: ['POLYCAB'] };
+const LUMINOUS: Brand = { name: 'Luminous', slug: 'luminous', src: `${A}/brand-luminous.svg` };
+
+export const PANEL_BRANDS: Brand[] = [ADANI, TATA, VIKRAM, UTL, MICROTEK, AVAADA, AMAZE, PREMIER, WAAREE];
+export const INVERTER_BRANDS: Brand[] = [AMAZE, DEYE, MICROTEK, POLYCAB, LUMINOUS];
 
 export const WHY_POINTS: { icon: LucideIcon; yellow?: boolean; title: string; text: string }[] = [
   { icon: Tag, yellow: true, title: 'Affordable & Cost-Effective Solutions', text: 'Reduce your electricity bills and get the best value.' },

@@ -1,9 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { ArrowRight, Phone, Sun } from 'lucide-react';
 import type { NavSection } from '../Navbar';
 import { COMPANY_INFO } from '../../data/solarData';
 import SiteFooter from '../home/SiteFooter';
-import QuoteModal from '../home/QuoteModal';
 import {
   CTA_BG, HERO_SERVICES, PROCESS_BG, PROCESS_STEPS, SERVE_CARDS, SERVICES_HERO_IMAGE, SERVICE_CARDS, SEGMENT_TILES,
 } from './servicesData';
@@ -17,9 +16,8 @@ interface ServicesPageProps {
   onQuoteClose: () => void;
 }
 
-export default function ServicesPage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteClose }: ServicesPageProps) {
-  const [topic, setTopic] = useState('');
-  const openQuote = useCallback((t = '') => { if (t) { setTopic(t); onQuoteOpen(); } else onNavigate('quote'); }, [onQuoteOpen, onNavigate]);
+export default function ServicesPage({ onNavigate }: ServicesPageProps) {
+  const openQuote = useCallback((_topic = '') => onNavigate('quote'), [onNavigate]);
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -149,7 +147,6 @@ export default function ServicesPage({ onNavigate, quoteOpen, onQuoteOpen, onQuo
       </section>
 
       <SiteFooter onNavigate={onNavigate} onQuote={() => openQuote()} />
-      <QuoteModal open={quoteOpen} topic={topic} onClose={onQuoteClose} />
     </div>
   );
 }

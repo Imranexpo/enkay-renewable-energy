@@ -140,7 +140,7 @@ function Logo({ onClick }: { onClick: () => void }) {
 // ─── Nav links definition ──────────────────────────────────────────────────
 const NAV_ITEMS: { id: NavSection; label: string; anchor?: string; hasDropdown?: boolean }[] = [
   { id: 'home',       label: 'Home' },
-  { id: 'about',      label: 'About Us',              hasDropdown: true },
+  { id: 'about',      label: 'About Us' },
   { id: 'services',   label: 'Services & Solutions' },
   { id: 'products',   label: 'Products & Brands' },
   { id: 'calculator', label: 'Solar Savings Calculator', anchor: 'calculator' },
