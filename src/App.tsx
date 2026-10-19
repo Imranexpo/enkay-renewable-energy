@@ -46,7 +46,9 @@ export default function App() {
 
   // Determine first-visit after mount (avoids SSR/hydration mismatch)
   useEffect(() => {
-    if (hasSeenIntroThisSession()) {
+    // No intro video on mobile viewports
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile || hasSeenIntroThisSession()) {
       setShowIntro(false);
       // Already seen intro → navbar visible immediately
       setNavVisible(true);

@@ -82,16 +82,12 @@ button {
   position: fixed;
   inset: 0;
   width: 100%;
-  width: 100vw;
   height: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100dvh; /* dynamic viewport: accounts for mobile browser toolbars */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000000;
+  background-color: #0b1f15;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -101,29 +97,47 @@ button {
 .enkay-intro-video-wrapper {
   position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100dvh;
+  /* inset:0 already fills the overlay; avoid 100vw (includes scrollbar → overflow) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #000;
+  background-color: #0b1f15; /* matches the video's dark green so letterbox bars are invisible */
 }
 
 .enkay-intro-video {
-  position: absolute;
-  inset: 0;
-  top: 0;
-  left: 0;
   display: block;
-  width: 100vw;
-  height: 100dvh;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   margin: 0;
   padding: 0;
   border: 0;
   outline: none;
-  object-fit: cover;
+  /* contain = whole frame always visible (no side cropping on portrait phones) */
+  object-fit: contain;
   object-position: center center;
   pointer-events: none;
+}
+
+/* Tablet & desktop (md+): fill the whole screen edge-to-edge, no side bars */
+@media (min-width: 768px) {
+  .enkay-intro-video {
+    object-fit: cover;
+  }
+}
+
+/* Keep the skip button clear of the logo on small screens */
+@media (max-width: 640px) {
+  .enkay-intro-skip-btn {
+    bottom: max(1rem, env(safe-area-inset-bottom, 16px));
+    right: max(1rem, env(safe-area-inset-right, 16px));
+    min-height: 44px; /* comfortable touch target */
+    padding: 0.5rem 1.25rem;
+  }
 }
 
 .enkay-intro-ambient {
@@ -139,7 +153,7 @@ button {
   bottom: max(1.5rem, env(safe-area-inset-bottom, 20px));
   right: 2rem;
   right: max(1.5rem, env(safe-area-inset-right, 20px));
-  z-index: 20;
+  z-index: 50; /* always above the video */
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 999px;
