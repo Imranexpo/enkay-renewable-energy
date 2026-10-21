@@ -1,5 +1,5 @@
 import {
-  Building2, Factory, HardHat, House, Leaf, PackageCheck, DraftingCompass, Shield, Tag, Wrench, Zap,
+  Leaf, Shield, Tag, Wrench, Zap,
   type LucideIcon,
 } from 'lucide-react';
 import type { NavSection } from '../Navbar';
@@ -45,21 +45,35 @@ export const WHY_POINTS: { icon: LucideIcon; yellow?: boolean; title: string; te
   { icon: Leaf, title: 'One-Step Towards a Green Future', text: 'Clean energy for a sustainable tomorrow.' },
 ];
 
-export const SOLUTIONS: { icon: LucideIcon; img: string; title: string; text: string }[] = [
-  { icon: House, img: `${A}/sol-residential.jpg`, title: 'Residential Solar', text: 'Clean, cost-effective solar energy for your home.' },
-  { icon: Building2, img: `${A}/sol-commercial.jpg`, title: 'Commercial Solar', text: 'Power your business with sustainable energy.' },
-  { icon: Factory, img: `${A}/sol-industrial.jpg`, title: 'Industrial Solar', text: 'High-performance solar solutions for large-scale operations.' },
-  { icon: DraftingCompass, img: `${A}/sol-design.jpg`, title: 'Design & Engineering', text: 'Customized and efficient solar system designs.' },
-  { icon: PackageCheck, img: `${A}/sol-procurement.jpg`, title: 'Procurement', text: 'High-quality products from trusted brands.' },
-  { icon: HardHat, img: `${A}/sol-epc.jpg`, title: 'EPC & Commissioning', text: 'End-to-end project execution and support.' },
-];
+export type SystemType = {
+  id: 'on-grid' | 'off-grid' | 'hybrid';
+  img: string;
+  title: string;
+  tag: string;
+  tagline: string;
+  points: string[];
+  best: string;
+};
 
-export const PRODUCTS = [
-  { img: `${A}/prod-panels.jpg`, title: 'Solar Panels' },
-  { img: `${A}/prod-inverters.jpg`, title: 'On-Grid Inverters' },
-  { img: `${A}/prod-cables.jpg`, title: 'Solar Cables' },
-  { img: `${A}/prod-mounting.jpg`, title: 'Mounting Structures' },
-  { img: `${A}/prod-bos.jpg`, title: 'Balance of System Components' },
+export const SYSTEM_TYPES: SystemType[] = [
+  {
+    id: 'on-grid', img: `${A}/on-grid-solar-system.jpg`, title: 'On-Grid Solar System',
+    tag: 'Grid-Connected | Net Metering', tagline: 'Lowest cost. Biggest bill savings.',
+    points: ['Directly connected to the public electricity grid.', 'Saves on power bills using Net Metering.', 'No battery needed (lower initial cost).'],
+    best: 'Best for homes & businesses with steady grid power',
+  },
+  {
+    id: 'off-grid', img: `${A}/off-grid-solar-system.jpg`, title: 'Off-Grid Solar System',
+    tag: '100% Energy Independent | Battery Storage', tagline: 'Your own power, anywhere.',
+    points: ['Operates independently without any grid connection.', 'Includes battery backup for 24/7 power availability.', 'Perfect for rural or frequent power-cut areas.'],
+    best: 'Best for remote sites & areas with frequent outages',
+  },
+  {
+    id: 'hybrid', img: `${A}/hybrid-solar-system.jpg`, title: 'Hybrid Solar System',
+    tag: 'Grid + Battery Backup | Maximum Reliability', tagline: 'Savings and backup, together.',
+    points: ['Combines both grid connection and battery storage.', 'Uninterrupted power supply during outages.', 'Exports excess energy back to the grid automatically.'],
+    best: 'Best for homes & businesses needing backup plus savings',
+  },
 ];
 
 export const FOOTER_LINKS: { label: string; section?: NavSection; quote?: boolean }[] = [

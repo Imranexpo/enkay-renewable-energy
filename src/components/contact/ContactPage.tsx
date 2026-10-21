@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   ArrowRight, ChevronDown, Leaf, Lock, Mail, MapPin, MessageCircle, MessageSquare, Minus, Navigation, Phone, Plus, Send,
   Settings, ShieldCheck, Sprout, Sun, Tag, User, Users,
@@ -7,6 +8,7 @@ import {
 import type { NavSection } from '../Navbar';
 import SiteFooter from '../home/SiteFooter';
 import QuoteModal from '../home/QuoteModal';
+import Reveal from '../Reveal';
 import { COMPANY_INFO } from '../../data/solarData';
 import { CONTACT_SUBJECTS, validateContact } from './contactLogic';
 import type { ContactErrors, ContactValues } from './contactLogic';
@@ -53,6 +55,7 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
   const [busy, setBusy] = useState(false);
   const [drafted, setDrafted] = useState(false);
   const timer = useRef<number | undefined>(undefined);
+  const reduce = useReducedMotion();
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const set = (key: keyof ContactValues, value: string) => {
@@ -90,13 +93,21 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
     <div className="hp ct">
       {/* ── Hero ── */}
       <section className="ct-hero" aria-labelledby="ct-title">
-        <img className="ct-hero-img" src="/assets/contact/hero.jpg" alt="" fetchPriority="high" />
+        <motion.img
+          className="ct-hero-img"
+          src="/assets/contact/hero.jpg"
+          alt=""
+          fetchPriority="high"
+          initial={reduce ? false : { scale: 1.15 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+        />
         <div className="hp-wrap ct-hero-inner">
-          <div className="ct-eyebrow">Get in Touch</div>
-          <h1 id="ct-title">Contact Us</h1>
-          <p>We're here to help! Whether you have a question, need support, or want to discuss your solar project, feel free to reach out to us. Our team will be happy to assist you.</p>
+          <Reveal className="ct-eyebrow" from="left" delay={0.1}>Get in Touch</Reveal>
+          <Reveal as="h1" id="ct-title" delay={0.25}>Contact Us</Reveal>
+          <Reveal as="p" delay={0.4}>We're here to help! Whether you have a question, need support, or want to discuss your solar project, feel free to reach out to us. Our team will be happy to assist you.</Reveal>
           <ul className="ct-chips">
-            {CHIPS.map(({ icon: Icon, text }) => <li key={text}><Icon size={22} aria-hidden="true" />{text}</li>)}
+            {CHIPS.map(({ icon: Icon, text }, i) => <Reveal as="li" key={text} delay={0.55 + i * 0.12}><Icon size={22} aria-hidden="true" />{text}</Reveal>)}
           </ul>
         </div>
       </section>
@@ -105,12 +116,15 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
       <section className="ct-main" aria-labelledby="ct-git">
         <div className="hp-wrap ct-grid">
           <div className="ct-left">
-            <h2 id="ct-git">Get in Touch</h2>
-            <p className="ct-sub">Reach us through any of the channels below.</p>
+            <Reveal from="left">
+              <h2 id="ct-git">Get in Touch</h2>
+              <p className="ct-sub">Reach us through any of the channels below.</p>
+            </Reveal>
 
             <div className="ct-cards">
-              {CARDS.map(({ icon: Icon, title, main, sub, href, external, wa }) => (
-                <a key={title} className="ct-card" href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+              {CARDS.map(({ icon: Icon, title, main, sub, href, external, wa }, i) => (
+                <Reveal key={title} from="left" delay={0.1 + i * 0.1}>
+                <a className="ct-card" href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                   <span className={`ct-ic${wa ? ' is-wa' : ''}`}><Icon size={22} aria-hidden="true" /></span>
                   <span className="ct-card-txt">
                     <h3>{title}</h3>
@@ -118,10 +132,11 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
                     <small>{sub}</small>
                   </span>
                 </a>
+                </Reveal>
               ))}
             </div>
 
-            <div className="ct-map">
+            <Reveal className="ct-map" scale={0.96} delay={0.2}>
               <img src="/assets/contact/map.jpg" alt="Map showing the ENKAY Renewable Energy office in Aminjikarai, Chennai" loading="lazy" />
               <a className="ct-map-open" href={MAP_URL} target="_blank" rel="noopener noreferrer"><Navigation size={16} aria-hidden="true" />Aminjikarai, Chennai</a>
               <div className="ct-pin" aria-hidden="true">
@@ -131,9 +146,10 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
               </div>
               <div className="ct-zoom" aria-hidden="true"><Plus size={20} /><hr /><Minus size={20} /></div>
               <span className="ct-attr">© OpenStreetMap contributors</span>
-            </div>
+            </Reveal>
           </div>
 
+          <Reveal from="right" delay={0.15}>
           <form className="ct-form" onSubmit={submit} noValidate>
             <header>
               <span className="ct-badge"><Send size={24} aria-hidden="true" /></span>
@@ -204,18 +220,19 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
 
             <p className="ct-privacy"><Lock size={16} aria-hidden="true" />Fields marked * are required. Your information is safe with us.</p>
           </form>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Trust strip ── */}
       <section className="ct-trust" aria-label="Why contact ENKAY">
         <div className="hp-wrap ct-trust-grid">
-          {TRUST.map(({ icon: Icon, title, text }) => (
-            <article key={title}>
+          {TRUST.map(({ icon: Icon, title, text }, i) => (
+            <Reveal as="article" key={title} delay={i * 0.12}>
               <span><Icon size={34} aria-hidden="true" /></span>
               <h3>{title}</h3>
               <p>{text}</p>
-            </article>
+            </Reveal>
           ))}
         </div>
       </section>

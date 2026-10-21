@@ -4,7 +4,6 @@ import Hero from './Hero';
 import TrustedBrands from './TrustedBrands';
 import WhyChoose from './WhyChoose';
 import Solutions from './Solutions';
-import Products from './Products';
 import CtaBanner from './CtaBanner';
 import SiteFooter from './SiteFooter';
 import './home.css';
@@ -25,7 +24,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <TrustedBrands overlap />
       <WhyChoose />
       <Solutions onEnquire={openQuote} />
-      <Products onViewAll={() => onNavigate('products')} onEnquire={openQuote} />
       <CtaBanner onQuote={() => openQuote()} />
       <SiteFooter onNavigate={onNavigate} onQuote={() => openQuote()} />
     </div>

@@ -165,3 +165,36 @@
   .ct-form header { align-items: flex-start; }
   .ct-attr { display: none; }
 }
+
+/* ── Motion & interaction ── */
+.ct { overflow-x: clip; }
+.ct-chips svg, .ct-ic, .ct-badge, .ct-trust article > span { transition: transform .3s, background-color .3s, color .3s; }
+.ct-chips li:hover svg { transform: rotate(-10deg) scale(1.2); }
+.ct-card:hover { transform: translateX(6px); }
+.ct-card:hover .ct-ic { transform: scale(1.12) rotate(-6deg); background: #2f8a43; color: #fff; }
+.ct-card:hover .ct-ic.is-wa { background: #25a244; }
+.ct-form:hover .ct-badge { transform: scale(1.08) rotate(-6deg); }
+.ct-input { transition: border-color .25s, box-shadow .25s; }
+.ct-input svg { transition: color .25s, transform .25s; }
+.ct-input:focus-within svg { color: #2f8a43; transform: scale(1.15); }
+.ct-error { animation: ct-shake .4s ease-out; }
+@keyframes ct-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.ct-status p { animation: ct-pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes ct-pop { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+.ct-send { animation: ct-glow 2.8s ease-in-out infinite; }
+.ct-send:disabled { animation: none; }
+.ct-send svg:last-child { transition: transform .2s; }
+.ct-send:hover svg:last-child { transform: translateX(4px); }
+@keyframes ct-glow { 0%, 100% { box-shadow: 0 10px 22px -12px rgba(47,138,67,.7); } 50% { box-shadow: 0 12px 30px -8px rgba(47,138,67,.95); } }
+
+.ct-dot { animation: ct-bounce 2.2s ease-in-out infinite; }
+.ct-pin i { animation: ct-shadow 2.2s ease-in-out infinite; }
+@keyframes ct-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes ct-shadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.75); opacity: .6; } }
+.ct-map > img { transition: transform .8s ease; }
+.ct-map:hover > img { transform: scale(1.05); }
+
+.ct-trust article:hover > span { transform: scale(1.2) rotate(-6deg); }
+@media (prefers-reduced-motion: reduce) {
+  .ct-send, .ct-dot, .ct-pin i, .ct-error, .ct-status p { animation: none; }
+}

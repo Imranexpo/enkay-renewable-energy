@@ -124,3 +124,36 @@
   .ab-tag::before { background: linear-gradient(180deg, #0d4f29 0%, rgba(13,79,41,.9) 55%, rgba(13,79,41,.5) 100%); }
   .ab-brands { padding: 56px 0 40px; }
 }
+
+/* ── Motion & interaction ── */
+.ab { overflow-x: clip; }
+.ab-dash { animation: ab-spin 40s linear infinite; }
+@keyframes ab-spin { to { transform: rotate(360deg); } }
+.ab-tag svg { animation: ab-pulse 2.6s ease-in-out infinite; }
+@keyframes ab-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+
+.ab-who-media > img { transition: transform .6s ease; }
+.ab-who-media:hover > img { transform: scale(1.03); }
+.ab-who-card { transition: box-shadow .3s; }
+.ab-who-card:hover { box-shadow: 0 30px 60px rgba(13,55,33,.24); }
+
+.ab-badges li, .ab-pills li { transition: color .25s, border-color .25s, background-color .25s, box-shadow .25s; }
+.ab-pills li:hover { border-color: var(--hp-green); background: #eef7ef; box-shadow: 0 8px 18px rgba(13,55,33,.1); }
+.ab-pills svg, .ab-badges svg { transition: transform .4s; }
+.ab-pills li:hover svg, .ab-badges li:hover svg { transform: rotate(90deg) scale(1.15); }
+
+.ab-why-list li { transition: color .25s; }
+.ab-check { transition: transform .3s, background-color .3s; }
+.ab-why-list li:hover .ab-check { transform: scale(1.15); background: var(--hp-green); }
+.ab-why-media img { transition: transform .8s ease; }
+.ab-why:hover .ab-why-media img { transform: scale(1.06); }
+
+.ab-vm-item { display: flex; }
+.ab-vm-item > .ab-vm-card { flex: 1; transition: transform .3s, box-shadow .3s, border-color .3s; }
+.ab-vm-item > .ab-vm-card:hover { transform: translateY(-8px); border-color: var(--hp-green); box-shadow: 0 24px 44px rgba(13,55,33,.14); }
+.ab-vm-card .ab-ico-green, .ab-vm-card .ab-ico-yellow { transition: transform .3s; }
+.ab-vm-card:hover .ab-ico-green, .ab-vm-card:hover .ab-ico-yellow { transform: scale(1.1) rotate(-4deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-dash, .ab-tag svg { animation: none; }
+}

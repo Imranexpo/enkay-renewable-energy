@@ -6,8 +6,8 @@ const P = '/assets/products';
 
 // Hero / CTA backdrops and two category photos could not be pulled from Figma (MCP call limit),
 // so they reuse the closest photos already shipped with the project.
-export const PRODUCTS_HERO_IMAGE = '/assets/about/hero-solar-farm.jpg';
-export const PRODUCTS_CTA_BG = '/assets/services/process-bg.jpg';
+export const PRODUCTS_HERO_IMAGE = '/assets/products/hero-panels.jpg';
+export const PRODUCTS_CTA_BG = '/assets/about/hero-solar-farm.jpg';
 
 export interface Category {
   icon: LucideIcon;

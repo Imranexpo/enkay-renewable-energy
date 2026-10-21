@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   ArrowRight, BadgeIndianRupee, Building, Building2, Check, ClipboardList, FileCheck2, FileText, Home, Info, Landmark, Leaf,
   Lock, Mail, MapPin, MessageSquare, Pencil, Phone, Send, Settings, ShieldCheck, Sprout, Sun, Timer, User, Users, Zap,
@@ -7,6 +8,7 @@ import {
 import type { NavSection } from '../Navbar';
 import SiteFooter from '../home/SiteFooter';
 import QuoteModal from '../home/QuoteModal';
+import Reveal from '../Reveal';
 import { COMPANY_INFO } from '../../data/solarData';
 import { BANK_DETAILS, QUOTE_BENEFITS, SUBSIDIES, TERMS } from './quoteData';
 import { EMPTY_QUOTE, quoteEmailBody, validateQuote } from './quoteLogic';
@@ -47,6 +49,7 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
   const [busy, setBusy] = useState(false);
   const [drafted, setDrafted] = useState(false);
   const timer = useRef<number | undefined>(undefined);
+  const reduce = useReducedMotion();
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const set = <K extends keyof QuoteValues>(key: K, value: QuoteValues[K]) => {
@@ -83,13 +86,21 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
     <div className="hp qt">
       {/* ── Hero ── */}
       <section className="qt-hero" aria-labelledby="qt-title">
-        <img className="qt-hero-img" src="/assets/quote/hero.jpg" alt="" fetchPriority="high" />
+        <motion.img
+          className="qt-hero-img"
+          src="/assets/quote/hero.jpg"
+          alt=""
+          fetchPriority="high"
+          initial={reduce ? false : { scale: 1.15 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+        />
         <div className="hp-wrap qt-hero-inner">
-          <div className="qt-eyebrow">Solar Solutions</div>
-          <h1 id="qt-title">Get a Quote</h1>
-          <p>Ready to switch to clean, renewable energy? Fill out the form below and get a personalized quote for your solar installation. Our team will get back to you with the best solution for your needs.</p>
+          <Reveal className="qt-eyebrow" from="left" delay={0.1}>Solar Solutions</Reveal>
+          <Reveal as="h1" id="qt-title" delay={0.25}>Get a Quote</Reveal>
+          <Reveal as="p" delay={0.4}>Ready to switch to clean, renewable energy? Fill out the form below and get a personalized quote for your solar installation. Our team will get back to you with the best solution for your needs.</Reveal>
           <ul className="qt-chips">
-            {CHIPS.map(({ icon: Icon, text }) => <li key={text}><Icon size={22} aria-hidden="true" />{text}</li>)}
+            {CHIPS.map(({ icon: Icon, text }, i) => <Reveal as="li" key={text} delay={0.55 + i * 0.12}><Icon size={22} aria-hidden="true" />{text}</Reveal>)}
           </ul>
         </div>
       </section>
@@ -97,6 +108,7 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
       {/* ── Request a quote ── */}
       <section className="qt-request" aria-label="Request a quote">
         <div className="hp-wrap qt-request-grid">
+          <Reveal from="left" delay={0.1}>
           <form className="qt-form" onSubmit={submit} noValidate>
             <header>
               <span className="qt-badge"><FileText size={24} aria-hidden="true" /></span>
@@ -196,13 +208,15 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
 
             <p className="qt-privacy"><Lock size={16} aria-hidden="true" />Fields marked * are required. Your information is safe with us.</p>
           </form>
+          </Reveal>
 
+          <Reveal from="right" delay={0.25}>
           <aside className="qt-side">
             <img className="qt-side-img" src="/assets/quote/side.jpg" alt="Solar installers fitting rooftop panels" loading="lazy" />
             <div className="qt-why">
               <h3>Why Choose ENKAY?</h3>
               <ul>
-                {QUOTE_BENEFITS.map(b => <li key={b}><span><Check size={14} strokeWidth={3} aria-hidden="true" /></span>{b}</li>)}
+                {QUOTE_BENEFITS.map((b, i) => <Reveal as="li" key={b} from="right" delay={0.4 + i * 0.1}><span><Check size={14} strokeWidth={3} aria-hidden="true" /></span>{b}</Reveal>)}
               </ul>
               <div className="qt-promo">
                 <div className="qt-promo-top">
@@ -217,20 +231,21 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
               </div>
             </div>
           </aside>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Commercial bid & terms ── */}
       <section className="qt-bid-sec" aria-labelledby="qt-bid-title">
         <div className="hp-wrap">
-          <div className="qt-bid-head">
+          <Reveal className="qt-bid-head">
             <div className="qt-eyebrow is-center">Price Summary</div>
             <h2 id="qt-bid-title">Commercial Bid &amp; Terms</h2>
             <p>Quotation for a Solar Power Plant System on the roof of the residence.</p>
-          </div>
+          </Reveal>
 
           <div className="qt-bid-grid">
-            <article className="qt-bid">
+            <Reveal as="article" className="qt-bid" from="left">
               <div className="qt-bid-top">
                 <div><small>Commercial Bid</small><h3>Price Details</h3></div>
                 <span className="qt-pill"><MapPin size={14} aria-hidden="true" />Price basis: Chennai</span>
@@ -249,10 +264,10 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
                 <div className="is-total"><dt>Total Amount (Rs.)</dt><dd><ToBeQuoted /></dd></div>
               </dl>
               <p className="qt-bid-note"><FileCheck2 size={22} aria-hidden="true" />The technical and commercial proposal includes the technical specifications and details to fulfil your requirements, and commercial terms with our best price.</p>
-            </article>
+            </Reveal>
 
             <div className="qt-stack">
-              <article className="qt-mini">
+              <Reveal as="article" className="qt-mini" from="right" delay={0.1}>
                 <h3><span className="qt-badge is-soft is-yellow"><Landmark size={22} aria-hidden="true" /></span>Subsidy Eligibility</h3>
                 <div className="qt-subs">
                   {SUBSIDIES.map(s => (
@@ -264,9 +279,9 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
                   ))}
                 </div>
                 <p className="qt-fine"><Info size={16} aria-hidden="true" />Actual subsidy approval and eligibility depend on the applicable scheme requirements.</p>
-              </article>
+              </Reveal>
 
-              <article className="qt-mini">
+              <Reveal as="article" className="qt-mini" from="right" delay={0.25}>
                 <h3><span className="qt-badge is-soft"><Building size={22} aria-hidden="true" /></span>Bank Account Details</h3>
                 <dl className="qt-bank">
                   {BANK_DETAILS.map(r => (
@@ -276,38 +291,38 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
                     </div>
                   ))}
                 </dl>
-              </article>
+              </Reveal>
             </div>
           </div>
 
-          <section className="qt-terms" aria-labelledby="qt-terms-title">
+          <Reveal as="section" className="qt-terms" aria-labelledby="qt-terms-title">
             <header>
               <h3 id="qt-terms-title"><ClipboardList size={26} aria-hidden="true" />Terms &amp; Conditions</h3>
               <span className="qt-tag">Applicable terms</span>
             </header>
             <ol>
               {TERMS.map((t, i) => (
-                <li key={t.title}>
+                <Reveal as="li" key={t.title} delay={(i % 2) * 0.1 + Math.floor(i / 2) * 0.08}>
                   <b>{i + 1}</b>
                   <div><h4>{t.title}</h4><p>{t.text}</p></div>
-                </li>
+                </Reveal>
               ))}
             </ol>
-          </section>
+          </Reveal>
 
-          <p className="qt-thanks"><Sun size={26} aria-hidden="true" /><span>“Thanking you and assuring you of our best services always.”</span><Sun size={26} aria-hidden="true" /></p>
+          <Reveal as="p" className="qt-thanks"><Sun size={26} aria-hidden="true" /><span>“Thanking you and assuring you of our best services always.”</span><Sun size={26} aria-hidden="true" /></Reveal>
         </div>
       </section>
 
       {/* ── Trust strip ── */}
       <section className="qt-trust" aria-label="Why choose ENKAY">
         <div className="hp-wrap qt-trust-grid">
-          {TRUST.map(({ icon: Icon, title, text }) => (
-            <article key={title}>
+          {TRUST.map(({ icon: Icon, title, text }, i) => (
+            <Reveal as="article" key={title} delay={i * 0.12}>
               <span><Icon size={34} aria-hidden="true" /></span>
               <h3>{title}</h3>
               <p>{text}</p>
-            </article>
+            </Reveal>
           ))}
         </div>
       </section>

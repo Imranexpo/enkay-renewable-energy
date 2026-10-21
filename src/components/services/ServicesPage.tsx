@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
 import { ArrowRight, Phone, Sun } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import type { NavSection } from '../Navbar';
 import { COMPANY_INFO } from '../../data/solarData';
 import SiteFooter from '../home/SiteFooter';
+import Reveal from '../Reveal';
 import {
   CTA_BG, HERO_SERVICES, PROCESS_BG, PROCESS_STEPS, SERVE_CARDS, SERVICES_HERO_IMAGE, SERVICE_CARDS, SEGMENT_TILES,
 } from './servicesData';
@@ -18,6 +20,7 @@ interface ServicesPageProps {
 
 export default function ServicesPage({ onNavigate }: ServicesPageProps) {
   const openQuote = useCallback((_topic = '') => onNavigate('quote'), [onNavigate]);
+  const reduce = useReducedMotion();
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -25,13 +28,21 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
     <div className="hp sv">
       {/* ── Hero ── */}
       <section className="sv-hero" aria-labelledby="sv-hero-title">
-        <img className="sv-hero-img" src={SERVICES_HERO_IMAGE} alt="Technician installing solar panels" fetchPriority="high" />
+        <motion.img
+          className="sv-hero-img"
+          src={SERVICES_HERO_IMAGE}
+          alt="Technician installing solar panels"
+          fetchPriority="high"
+          initial={reduce ? false : { scale: 1.15 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+        />
         <div className="hp-wrap sv-hero-inner">
-          <div className="hp-eyebrow">Our Services</div>
-          <h1 id="sv-hero-title">Services &amp; Solutions</h1>
-          <p>From consultation to commissioning, we provide complete solar solutions tailored to your needs.</p>
+          <Reveal className="hp-eyebrow" from="left" delay={0.1}>Our Services</Reveal>
+          <Reveal as="h1" id="sv-hero-title" delay={0.25}>Services &amp; Solutions</Reveal>
+          <Reveal as="p" delay={0.4}>From consultation to commissioning, we provide complete solar solutions tailored to your needs.</Reveal>
           <ul className="sv-hero-list">
-            {HERO_SERVICES.map(({ icon: Icon, label }) => <li key={label}><Icon size={22} />{label}</li>)}
+            {HERO_SERVICES.map(({ icon: Icon, label }, i) => <Reveal as="li" key={label} delay={0.55 + i * 0.12}><Icon size={22} />{label}</Reveal>)}
           </ul>
         </div>
       </section>
@@ -39,13 +50,13 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       {/* ── Segment tiles overlapping the hero ── */}
       <div className="hp-wrap sv-tiles-wrap">
         <ul className="sv-tiles">
-          {SEGMENT_TILES.map(({ icon: Icon, title, text, target }) => (
-            <li key={title}>
+          {SEGMENT_TILES.map(({ icon: Icon, title, text, target }, i) => (
+            <Reveal as="li" key={title} delay={0.7 + i * 0.15}>
               <button onClick={() => scrollTo(target)}>
                 <span className="sv-ico"><Icon size={26} /></span>
                 <span><strong>{title}</strong><small>{text}</small></span>
               </button>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>
@@ -53,16 +64,17 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       {/* ── What we do ── */}
       <section className="sv-what" aria-labelledby="sv-what-title">
         <div className="hp-wrap">
-          <div className="sv-head">
+          <Reveal className="sv-head">
             <div className="hp-eyebrow is-center">What We Do</div>
             <h2 id="sv-what-title">Complete solar services under one roof</h2>
             <p>Solutions available for residential, industrial and commercial solar power projects.</p>
-          </div>
+          </Reveal>
           <div className="sv-grid">
             {SERVICE_CARDS.map(({ icon: Icon, img, title, text }, i) => {
               const n = String(i + 1).padStart(2, '0');
               return (
-                <article key={title} id={`svc-${n}`} className="sv-card">
+                <Reveal key={title} className="sv-card-item" delay={(i % 3) * 0.12}>
+                <article id={`svc-${n}`} className="sv-card">
                   <div className="sv-card-img">
                     <img src={img} alt={title} loading="lazy" />
                     <span className="sv-num">{n}</span>
@@ -74,6 +86,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                     <button className="hp-link" onClick={() => openQuote(title)}>Learn more <ArrowRight size={15} /></button>
                   </div>
                 </article>
+                </Reveal>
               );
             })}
           </div>
@@ -84,46 +97,46 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       <section className="sv-process" aria-labelledby="sv-process-title">
         <img className="sv-process-bg" src={PROCESS_BG} alt="" loading="lazy" />
         <div className="hp-wrap">
-          <div className="sv-head is-light">
+          <Reveal className="sv-head is-light">
             <div className="hp-eyebrow is-center is-lime">Our Turnkey Process</div>
             <h2 id="sv-process-title">Concept to Commissioning</h2>
             <p>
               Complete TURNKEY solutions for solar PV power plants of any capacity — Design Engineering, Procurement,
               Construction and Commissioning (EPC).
             </p>
-          </div>
+          </Reveal>
           <ol className="sv-steps">
             {PROCESS_STEPS.map(({ icon: Icon, title, text }, i) => (
-              <li key={title} className={i === PROCESS_STEPS.length - 1 ? 'is-last' : ''}>
+              <Reveal as="li" key={title} className={i === PROCESS_STEPS.length - 1 ? 'is-last' : ''} delay={i * 0.15}>
                 <span className="sv-step-circle">
                   <Icon size={36} strokeWidth={1.6} />
                   <b>{i + 1}</b>
                 </span>
                 <h3>{title}</h3>
                 <p>{text}</p>
-              </li>
+              </Reveal>
             ))}
           </ol>
-          <p className="sv-avail"><Sun size={18} /> Available for residential, industrial and commercial solar power projects</p>
+          <Reveal as="p" className="sv-avail" delay={0.3}><Sun size={18} /> Available for residential, industrial and commercial solar power projects</Reveal>
         </div>
       </section>
 
       {/* ── Who we serve ── */}
       <section className="sv-serve" aria-labelledby="sv-serve-title">
         <div className="hp-wrap">
-          <div className="sv-head">
+          <Reveal className="sv-head">
             <div className="hp-eyebrow is-center">Who We Serve</div>
             <h2 id="sv-serve-title">Solar for every scale</h2>
-          </div>
+          </Reveal>
           <div className="sv-serve-grid">
-            {SERVE_CARDS.map(({ icon: Icon, img, title, text }) => (
-              <article key={title} className="sv-serve-card">
+            {SERVE_CARDS.map(({ icon: Icon, img, title, text }, i) => (
+              <Reveal key={title} className="sv-serve-card" delay={i * 0.15} scale={0.95}>
                 <img src={img} alt={`${title} solar installation`} loading="lazy" />
                 <div>
                   <h3><Icon size={24} />{title}</h3>
                   <p>{text}</p>
                 </div>
-              </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -132,7 +145,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       {/* ── CTA banner ── */}
       <section className="sv-cta-sec" aria-labelledby="sv-cta-title">
         <div className="hp-wrap">
-          <div className="sv-cta" style={{ backgroundImage: `url(${CTA_BG})` }}>
+          <Reveal className="sv-cta" scale={0.96} style={{ backgroundImage: `url(${CTA_BG})` }}>
             <div className="sv-cta-copy">
               <div className="hp-eyebrow is-lime">Not sure where to start?</div>
               <h2 id="sv-cta-title">Find the Right Solar Solution</h2>
@@ -142,7 +155,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
               <button className="hp-btn hp-btn-yellow" onClick={() => openQuote()}><Sun size={20} /> Get a Quote <ArrowRight size={18} /></button>
               <a className="sv-cta-call" href={`tel:${COMPANY_INFO.phoneRaw}`}><Phone size={20} /> Talk to Our Team</a>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
