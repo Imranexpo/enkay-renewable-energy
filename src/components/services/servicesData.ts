@@ -21,14 +21,14 @@ export const SEGMENT_TILES: { icon: LucideIcon; title: string; text: string; tar
 ];
 
 export const SERVICE_CARDS: { icon: LucideIcon; img: string; title: string; text: string }[] = [
-  { icon: House, img: `${A}/card-residential.jpg`, title: 'Residential Solar Solutions', text: 'Clean, cost-effective solar energy for your home.' },
-  { icon: Building2, img: `${A}/card-commercial.jpg`, title: 'Commercial Solar Solutions', text: 'Power your business with sustainable energy.' },
+  { icon: House, img: `${A}/card-residential-home.jpg`, title: 'Residential Solar Solutions', text: 'Clean, cost-effective solar energy for your home.' },
+  { icon: Building2, img: `${A}/card-commercial-rooftop.jpg`, title: 'Commercial Solar Solutions', text: 'Power your business with sustainable energy.' },
   { icon: Factory, img: `${A}/card-industrial.jpg`, title: 'Industrial Solar Solutions', text: 'High-performance solar solutions for large-scale operations.' },
-  { icon: DraftingCompass, img: `${A}/card-design.jpg`, title: 'Design & Engineering', text: 'Customized and efficient solar system designs.' },
+  { icon: DraftingCompass, img: `${A}/card-design-engineers.jpg`, title: 'Design & Engineering', text: 'Customized and efficient solar system designs.' },
   { icon: PackageCheck, img: `${A}/card-procurement.jpg`, title: 'Procurement', text: 'High-quality products from trusted brands.' },
   { icon: HardHat, img: `${A}/card-epc.jpg`, title: 'EPC & Commissioning', text: 'End-to-end project execution and support.' },
-  { icon: PlugZap, img: `${A}/card-ongrid.jpg`, title: 'On-Grid Solar Systems', text: 'Solar power solutions connected to the electricity grid.' },
-  { icon: BatteryCharging, img: `${A}/card-offgrid.jpg`, title: 'Off-Grid Solar Systems', text: 'Solar solutions designed for off-grid requirements.' },
+  { icon: PlugZap, img: `${A}/card-ongrid-neighbourhood.jpg`, title: 'On-Grid Solar Systems', text: 'Solar power solutions connected to the electricity grid.' },
+  { icon: BatteryCharging, img: `${A}/card-offgrid-hut.jpg`, title: 'Off-Grid Solar Systems', text: 'Solar solutions designed for off-grid requirements.' },
   { icon: Wrench, img: `${A}/card-maintenance.jpg`, title: 'Maintenance & Support', text: 'Reliable maintenance and ongoing technical support.' },
 ];
 
@@ -43,8 +43,8 @@ export const PROCESS_STEPS: { icon: LucideIcon; title: string; text: string }[] 
 ];
 
 export const SERVE_CARDS: { icon: LucideIcon; img: string; title: string; text: string }[] = [
-  { icon: House, img: `${A}/serve-residential.png`, title: 'Residential', text: 'Rooftop solar for homes, on-grid and off-grid.' },
-  { icon: Building2, img: `${A}/serve-commercial.png`, title: 'Commercial', text: 'Sustainable energy for businesses and commercial buildings.' },
+  { icon: House, img: `${A}/card-residential-home.jpg`, title: 'Residential', text: 'Rooftop solar for homes, on-grid and off-grid.' },
+  { icon: Building2, img: `${A}/card-commercial-rooftop.jpg`, title: 'Commercial', text: 'Sustainable energy for businesses and commercial buildings.' },
   { icon: Factory, img: `${A}/serve-industrial.jpg`, title: 'Industrial', text: 'Solar PV power plants of any capacity for export to the grid.' },
 ];
 
