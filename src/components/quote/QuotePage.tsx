@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
@@ -11,8 +11,9 @@ import QuoteModal from '../home/QuoteModal';
 import Reveal from '../Reveal';
 import { COMPANY_INFO } from '../../data/solarData';
 import { BANK_DETAILS, QUOTE_BENEFITS, SUBSIDIES, TERMS } from './quoteData';
-import { EMPTY_QUOTE, quoteEmailBody, validateQuote } from './quoteLogic';
+import { EMPTY_QUOTE, validateQuote } from './quoteLogic';
 import type { QuoteErrors, QuoteProjectType, QuoteValues } from './quoteLogic';
+import { submitQuote } from '../../lib/enquiries';
 import '../home/home.css';
 import './quote.css';
 
@@ -47,33 +48,37 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
   const [values, setValues] = useState<QuoteValues>(EMPTY_QUOTE);
   const [errors, setErrors] = useState<QuoteErrors>({});
   const [busy, setBusy] = useState(false);
-  const [drafted, setDrafted] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
+  const [result, setResult] = useState<'sent' | 'failed' | null>(null);
   const reduce = useReducedMotion();
-  useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const set = <K extends keyof QuoteValues>(key: K, value: QuoteValues[K]) => {
     setValues(p => ({ ...p, [key]: value }));
     if (errors[key]) setErrors(p => ({ ...p, [key]: undefined }));
-    setDrafted(false);
+    setResult(null);
   };
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (busy) return;
     const found = validateQuote(values);
     setErrors(found);
     if (Object.keys(found).length) {
-      setDrafted(false);
+      setResult(null);
       const first = ORDER.find(k => found[k]);
       if (first) document.getElementById(`qt-${first}`)?.focus();
       return;
     }
-    // This project has no backend: open the visitor's email app with the request drafted.
     setBusy(true);
-    window.location.href = `mailto:${COMPANY_INFO.email}?subject=${encodeURIComponent('Solar quote request')}&body=${encodeURIComponent(quoteEmailBody(values))}`;
-    setDrafted(true);
-    timer.current = window.setTimeout(() => setBusy(false), 2000);
+    try {
+      await submitQuote(values);
+      setValues(EMPTY_QUOTE);
+      setResult('sent');
+    } catch (ex) {
+      console.error('Quote submit failed', ex);
+      setResult('failed');
+    } finally {
+      setBusy(false);
+    }
   };
 
   const a11y = (k: keyof QuoteValues) => ({
@@ -194,14 +199,16 @@ export default function QuotePage({ onNavigate, quoteOpen, onQuoteOpen, onQuoteC
             </div>
 
             <button type="submit" className="qt-send" disabled={busy} aria-busy={busy}>
-              <Send size={20} aria-hidden="true" />{busy ? 'Opening your email app…' : 'Request a Quote'}{!busy && <ArrowRight size={20} aria-hidden="true" />}
+              <Send size={20} aria-hidden="true" />{busy ? 'Sending…' : 'Request a Quote'}{!busy && <ArrowRight size={20} aria-hidden="true" />}
             </button>
 
             <div className="qt-status" role="status" aria-live="polite">
-              {drafted && (
+              {result === 'sent' && (
+                <p className="is-ok">Thank you! Your quote request has been received. Our team will contact you shortly with a personalised quotation.</p>
+              )}
+              {result === 'failed' && (
                 <p>
-                  Your email app should now be open with this request drafted to {COMPANY_INFO.email}. Press send there to deliver it — nothing has been sent yet.
-                  If nothing opened, email us at <a href={`mailto:${COMPANY_INFO.email}`}>{COMPANY_INFO.email}</a> or call <a href={`tel:${COMPANY_INFO.phoneRaw}`}>{COMPANY_INFO.phone}</a>.
+                  Sorry, we couldn't send your request right now. Please try again, or email us at <a href={`mailto:${COMPANY_INFO.email}`}>{COMPANY_INFO.email}</a> or call <a href={`tel:${COMPANY_INFO.phoneRaw}`}>{COMPANY_INFO.phone}</a>.
                 </p>
               )}
             </div>

@@ -9,21 +9,24 @@ import ProductsPage from './components/products/ProductsPage';
 import CalculatorPage from './components/calculator/CalculatorPage';
 import ContactPage from './components/contact/ContactPage';
 import QuotePage from './components/quote/QuotePage';
+import LegalPage from './components/legal/LegalPage';
+import { PRIVACY_POLICY, TERMS_AND_CONDITIONS } from './components/legal/legalData';
 import { SECTION_ANCHORS } from './components/home/homeData';
 
 const SESSION_KEY = 'enkay_intro_shown';
 
-type Route = 'home' | 'about' | 'services' | 'products' | 'calculator' | 'contact' | 'quote';
+type Route = 'home' | 'about' | 'services' | 'products' | 'calculator' | 'contact' | 'quote' | 'privacy' | 'terms';
 
 // Navbar sections that are separate pages, with their URLs.
-const PAGE_PATHS: Partial<Record<NavSection, string>> = { about: '/about', services: '/services', products: '/products', calculator: '/calculator', contact: '/contact', quote: '/get-a-quote' };
+const PAGE_PATHS: Partial<Record<NavSection, string>> = { about: '/about', services: '/services', products: '/products', calculator: '/calculator', contact: '/contact', quote: '/get-a-quote', privacy: '/privacy-policy', terms: '/terms-and-conditions' };
 
 // Sections that only exist on the homepage — navigating to them from another page returns home first.
 const HOME_ONLY: NavSection[] = [];
 
 const routeFromPath = (): Route => {
   const path = window.location.pathname.replace(/\/+$/, '');
-  return path === '/about' ? 'about' : path === '/services' ? 'services' : path === '/products' ? 'products' : path === '/calculator' ? 'calculator' : path === '/contact' ? 'contact' : path === '/get-a-quote' ? 'quote' : 'home';
+  const match = Object.entries(PAGE_PATHS).find(([, p]) => p === path);
+  return (match?.[0] as Route | undefined) ?? 'home';
 };
 
 function hasSeenIntroThisSession(): boolean {
@@ -82,7 +85,7 @@ export default function App() {
     setActivePage(section);
     const target = anchorId ?? SECTION_ANCHORS[section];
 
-    // About Us, Services, Products the Calculator and Contact are their own pages
+    // About Us, Services, Products, the Calculator, Contact and the legal pages are their own pages
     const pagePath = PAGE_PATHS[section];
     if (pagePath) {
       const next = section as Route;
@@ -163,6 +166,16 @@ export default function App() {
           />
         ) : route === 'quote' ? (
           <QuotePage
+            onNavigate={handleNavigate}
+            quoteOpen={quoteOpen}
+            onQuoteOpen={() => setQuoteOpen(true)}
+            onQuoteClose={() => setQuoteOpen(false)}
+          />
+        ) : route === 'privacy' || route === 'terms' ? (
+          <LegalPage
+            key={route}
+            doc={route === 'privacy' ? PRIVACY_POLICY : TERMS_AND_CONDITIONS}
+            related={route === 'privacy' ? { label: 'Terms & Conditions', section: 'terms' } : { label: 'Privacy Policy', section: 'privacy' }}
             onNavigate={handleNavigate}
             quoteOpen={quoteOpen}
             onQuoteOpen={() => setQuoteOpen(true)}

@@ -5,7 +5,7 @@ export const COMPANY_INFO = {
   shortName: 'ENKAY',
   phone: '+91 63850 82822',
   phoneRaw: '+916385082822',
-  email: 'enkayrenewablesenergy@gmail.com',
+  email: 'support@enkayrenewablesenergy.com',
   address: 'No. 25, 2nd Floor, Lakshmi Talkies Road, Shenoy Nagar (East), Aminjikarai, Chennai – 600 030, Tamil Nadu, India',
   city: 'Aminjikarai, Chennai - 600 030',
   operatingHours: 'Monday – Saturday: 9:00 AM – 6:30 PM IST',

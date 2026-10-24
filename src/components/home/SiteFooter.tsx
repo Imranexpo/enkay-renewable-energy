@@ -54,7 +54,10 @@ export default function SiteFooter({ onNavigate, onQuote }: Props) {
       <div className="hp-footer-bar">
         <div className="hp-wrap">
           <span>Copyright © 2026 ENKAY Renewable Energy. All rights reserved.</span>
-          <nav aria-label="Legal"><a href="#">Privacy Policy</a><i /><a href="#">Terms &amp; Conditions</a></nav>
+          <nav aria-label="Legal">
+            <a href="/privacy-policy" onClick={e => { e.preventDefault(); onNavigate('privacy'); }}>Privacy Policy</a><i />
+            <a href="/terms-and-conditions" onClick={e => { e.preventDefault(); onNavigate('terms'); }}>Terms &amp; Conditions</a>
+          </nav>
         </div>
       </div>
     </footer>

@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { FormEvent } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
-  ArrowRight, ChevronDown, Leaf, Lock, Mail, MapPin, MessageCircle, MessageSquare, Minus, Navigation, Phone, Plus, Send,
-  Settings, ShieldCheck, Sprout, Sun, Tag, User, Users,
+  ArrowRight, ChevronDown, Leaf, Lock, Mail, MapPin, MessageCircle, MessageSquare, Navigation, Phone, Send,
+  Settings, ShieldCheck, Sprout, Tag, User, Users,
 } from 'lucide-react';
 import type { NavSection } from '../Navbar';
 import SiteFooter from '../home/SiteFooter';
@@ -12,6 +12,7 @@ import Reveal from '../Reveal';
 import { COMPANY_INFO } from '../../data/solarData';
 import { CONTACT_SUBJECTS, validateContact } from './contactLogic';
 import type { ContactErrors, ContactValues } from './contactLogic';
+import { submitContact } from '../../lib/enquiries';
 import '../home/home.css';
 import './contact.css';
 
@@ -22,7 +23,8 @@ interface Props {
   onQuoteClose: () => void;
 }
 
-const MAP_URL = 'https://www.openstreetmap.org/search?query=Aminjikarai%2C%20Chennai';
+const MAP_URL = 'https://www.google.com/maps/search/?api=1&query=Aminjikarai%2C%20Chennai%2C%20Tamil%20Nadu';
+const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7772.8990318274355!2d80.21925983980266!3d13.070672999015274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a526685d94f22f9%3A0x4b0e36475dddf085!2sAminjikarai%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1792868298329!5m2!1sen!2sin';
 const WHATSAPP_URL = `https://wa.me/${COMPANY_INFO.phoneRaw.replace(/\D/g, '')}`;
 
 const CHIPS = [
@@ -53,34 +55,37 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
   const [values, setValues] = useState<ContactValues>(EMPTY);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [busy, setBusy] = useState(false);
-  const [drafted, setDrafted] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
+  const [result, setResult] = useState<'sent' | 'failed' | null>(null);
   const reduce = useReducedMotion();
-  useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const set = (key: keyof ContactValues, value: string) => {
     setValues(p => ({ ...p, [key]: value }));
     if (errors[key]) setErrors(p => ({ ...p, [key]: undefined }));
-    setDrafted(false);
+    setResult(null);
   };
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (busy) return;
     const found = validateContact(values);
     setErrors(found);
     if (Object.keys(found).length) {
-      setDrafted(false);
+      setResult(null);
       const first = ORDER.find(k => found[k]);
       if (first) document.getElementById(`ct-${first}`)?.focus();
       return;
     }
-    // No backend exists in this project: open the visitor's email app with the message drafted.
     setBusy(true);
-    const body = `Name: ${values.name}\nEmail: ${values.email}\nPhone: ${values.phone}\n\n${values.message}`;
-    window.location.href = `mailto:${COMPANY_INFO.email}?subject=${encodeURIComponent(`Website enquiry: ${values.subject}`)}&body=${encodeURIComponent(body)}`;
-    setDrafted(true);
-    timer.current = window.setTimeout(() => setBusy(false), 2000);
+    try {
+      await submitContact(values);
+      setValues(EMPTY);
+      setResult('sent');
+    } catch (ex) {
+      console.error('Contact submit failed', ex);
+      setResult('failed');
+    } finally {
+      setBusy(false);
+    }
   };
 
   const a11y = (k: keyof ContactValues) => ({
@@ -137,15 +142,14 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
             </div>
 
             <Reveal className="ct-map" scale={0.96} delay={0.2}>
-              <img src="/assets/contact/map.jpg" alt="Map showing the ENKAY Renewable Energy office in Aminjikarai, Chennai" loading="lazy" />
-              <a className="ct-map-open" href={MAP_URL} target="_blank" rel="noopener noreferrer"><Navigation size={16} aria-hidden="true" />Aminjikarai, Chennai</a>
-              <div className="ct-pin" aria-hidden="true">
-                <div className="ct-bubble"><b>ENKAY Renewable Energy</b><span><MapPin size={14} />Aminjikarai, Chennai</span></div>
-                <div className="ct-dot"><Sun size={20} /></div>
-                <i />
-              </div>
-              <div className="ct-zoom" aria-hidden="true"><Plus size={20} /><hr /><Minus size={20} /></div>
-              <span className="ct-attr">© OpenStreetMap contributors</span>
+              <iframe
+                src={MAP_EMBED_URL}
+                title="Map showing the ENKAY Renewable Energy office in Aminjikarai, Chennai"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+              <a className="ct-map-open" href={MAP_URL} target="_blank" rel="noopener noreferrer"><Navigation size={16} aria-hidden="true" />Open in Google Maps</a>
             </Reveal>
           </div>
 
@@ -206,14 +210,16 @@ export default function ContactPage({ onNavigate, quoteOpen, onQuoteOpen, onQuot
             </div>
 
             <button type="submit" className="ct-send" disabled={busy} aria-busy={busy}>
-              <Send size={20} aria-hidden="true" />{busy ? 'Opening your email app…' : 'Send Message'}{!busy && <ArrowRight size={20} aria-hidden="true" />}
+              <Send size={20} aria-hidden="true" />{busy ? 'Sending…' : 'Send Message'}{!busy && <ArrowRight size={20} aria-hidden="true" />}
             </button>
 
             <div className="ct-status" role="status" aria-live="polite">
-              {drafted && (
+              {result === 'sent' && (
+                <p className="is-ok">Thank you! Your message has been sent. Our team will get back to you within 24 hours.</p>
+              )}
+              {result === 'failed' && (
                 <p>
-                  Your email app should now be open with this message drafted to {COMPANY_INFO.email}. Press send there to deliver it — nothing has been sent yet.
-                  If nothing opened, email us directly at <a href={`mailto:${COMPANY_INFO.email}`}>{COMPANY_INFO.email}</a> or call <a href={`tel:${COMPANY_INFO.phoneRaw}`}>{COMPANY_INFO.phone}</a>.
+                  Sorry, we couldn't send your message right now. Please try again, or email us at <a href={`mailto:${COMPANY_INFO.email}`}>{COMPANY_INFO.email}</a> or call <a href={`tel:${COMPANY_INFO.phoneRaw}`}>{COMPANY_INFO.phone}</a>.
                 </p>
               )}
             </div>

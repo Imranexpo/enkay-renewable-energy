@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { COMPANY_INFO } from '../data/solarData';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
-export type NavSection = 'home' | 'about' | 'services' | 'products' | 'calculator' | 'contact' | 'quote';
+export type NavSection = 'home' | 'about' | 'services' | 'products' | 'calculator' | 'contact' | 'quote' | 'privacy' | 'terms';
 
 interface NavbarProps {
   activePage?: NavSection;
